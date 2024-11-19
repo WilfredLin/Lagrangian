@@ -1,0 +1,28 @@
+import sympy as sp
+
+# Define symbols
+x, y, lambda_ = sp.symbols('x y lambda')
+
+# Define the Lagrangian function L = T - V
+# T is kinetic energy, V is potential energy
+T = 0.5 * (x**2 + y**2)  # Example kinetic energy
+V = x**2 + y**2  # Example potential energy
+L = T - V
+
+# Define constraints (if any)
+constraint = x + y - 1  # Example constraint
+
+# Define the Lagrangian with the constraint
+Lagrangian = L + lambda_ * constraint
+
+# Calculate the gradients
+grad_Lagrangian_x = sp.diff(Lagrangian, x)
+grad_Lagrangian_y = sp.diff(Lagrangian, y)
+
+# Set the gradients to zero for optimization
+Lagrange_eq = (sp.Eq(grad_Lagrangian_x, 0), sp.Eq(grad_Lagrangian_y, 0))
+
+# Solve the equations
+solution = sp.solve(Lagrange_eq, (x, y))
+
+print("Solution:", solution)
