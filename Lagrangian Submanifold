@@ -1,0 +1,47 @@
+import sympy as sp
+
+# Define symbols
+x, y, lambda_ = sp.symbols('x y lambda')
+
+# Define the Lagrangian function L = T - V
+# T is kinetic energy, V is potential energy
+T = 0.5 * (x**2 + y**2)  # Example kinetic energy
+V = x**2 + y**2  # Example potential energy
+L = T - V
+
+# Define constraints (if any)
+constraint = x + y - 1  # Example constraint
+
+# Define the Lagrangian with the constraint
+Lagrangian = L + lambda_ * constraint
+
+# Calculate the gradients
+grad_Lagrangian_x = sp.diff(Lagrangian, x)
+grad_Lagrangian_y = sp.diff(Lagrangian, y)
+
+# Set the gradients to zero for optimization
+Lagrange_eq = (sp.Eq(grad_Lagrangian_x, 0), sp.Eq(grad_Lagrangian_y, 0))
+
+# Solve the equations
+solution = sp.solve(Lagrange_eq, (x, y))
+
+# Calculate the dual function
+dual_function = L.subs({x: solution[x], y: solution[y]}) + lambda_ * constraint.subs({x: solution[x], y: solution[y]})
+
+# Calculate the gradient of the dual function
+grad_dual_lambda = sp.diff(dual_function, lambda_)
+
+# Set the gradient of the dual function to zero for optimization
+dual_eq = sp.Eq(grad_dual_lambda, 0)
+
+# Solve the dual equation
+dual_solution = sp.solve(dual_eq, lambda_)
+
+print("Primal Solution:", solution)
+print("Dual Solution:", dual_solution)
+
+# Define Lagrangian submanifold
+# The submanifold is defined by the constraint and the solutions
+lagrangian_submanifold = [(sol[x], sol[y]) for sol in solution if sol[lambda_] == dual_solution]
+
+print("Lagrangian Submanifold:", lagrangian_submanifold)
